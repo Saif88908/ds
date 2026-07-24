@@ -1,0 +1,125 @@
+Experiment: Menu-Driven Program for Matrix Operations (Addition, Multiplication, and Transpose)
+#include <stdio.h>
+
+#define MAX 10
+
+int main() {
+    int a[MAX][MAX], b[MAX][MAX], result[MAX][MAX];
+    int r1, c1, r2, c2, i, j, k, choice;
+
+    do {
+        printf("\n----- MATRIX OPERATIONS MENU -----\n");
+        printf("1. Addition\n");
+        printf("2. Multiplication\n");
+        printf("3. Transpose\n");
+        printf("4. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+
+            case 1:
+                printf("Enter rows and columns of Matrix A: ");
+                scanf("%d%d", &r1, &c1);
+
+                printf("Enter rows and columns of Matrix B: ");
+                scanf("%d%d", &r2, &c2);
+
+                if(r1 != r2 || c1 != c2) {
+                    printf("Addition not possible!\n");
+                }
+                else {
+                    printf("Enter elements of Matrix A:\n");
+                    for(i = 0; i < r1; i++)
+                        for(j = 0; j < c1; j++)
+                            scanf("%d", &a[i][j]);
+
+                    printf("Enter elements of Matrix B:\n");
+                    for(i = 0; i < r2; i++)
+                        for(j = 0; j < c2; j++)
+                            scanf("%d", &b[i][j]);
+
+                    printf("Resultant Matrix:\n");
+                    for(i = 0; i < r1; i++) {
+                        for(j = 0; j < c1; j++) {
+                            result[i][j] = a[i][j] + b[i][j];
+                            printf("%d ", result[i][j]);
+                        }
+                        printf("\n");
+                    }
+                }
+                break;
+
+            case 2:
+                printf("Enter rows and columns of Matrix A: ");
+                scanf("%d%d", &r1, &c1);
+
+                printf("Enter rows and columns of Matrix B: ");
+                scanf("%d%d", &r2, &c2);
+
+                if(c1 != r2) {
+                    printf("Multiplication not possible!\n");
+                }
+                else {
+                    printf("Enter elements of Matrix A:\n");
+                    for(i = 0; i < r1; i++)
+                        for(j = 0; j < c1; j++)
+                            scanf("%d", &a[i][j]);
+
+                    printf("Enter elements of Matrix B:\n");
+                    for(i = 0; i < r2; i++)
+                        for(j = 0; j < c2; j++)
+                            scanf("%d", &b[i][j]);
+
+                    for(i = 0; i < r1; i++)
+                        for(j = 0; j < c2; j++)
+                            result[i][j] = 0;
+
+                    for(i = 0; i < r1; i++) {
+                        for(j = 0; j < c2; j++) {
+                            for(k = 0; k < c1; k++) {
+                                result[i][j] += a[i][k] * b[k][j];
+                            }
+                        }
+                    }
+
+                    printf("Resultant Matrix:\n");
+                    for(i = 0; i < r1; i++) {
+                        for(j = 0; j < c2; j++)
+                            printf("%d ", result[i][j]);
+                        printf("\n");
+                    }
+                }
+                break;
+
+            case 3:
+                printf("Enter rows and columns of Matrix: ");
+                scanf("%d%d", &r1, &c1);
+
+                printf("Enter elements of Matrix:\n");
+                for(i = 0; i < r1; i++)
+                    for(j = 0; j < c1; j++)
+                        scanf("%d", &a[i][j]);
+
+                printf("Transpose of Matrix:\n");
+                for(i = 0; i < c1; i++) {
+                    for(j = 0; j < r1; j++) {
+                        printf("%d ", a[j][i]);
+                    }
+                    printf("\n");
+                }
+                break;
+
+            case 4:
+                printf("Exiting program...\n");
+                break;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+    } while(choice != 4);
+
+    return 0;
+}
