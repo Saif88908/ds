@@ -1,0 +1,752 @@
+4A - 193 lines ka
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;
+
+// Create a node
+void create_list() {
+    struct node *n = malloc(sizeof(struct node));
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->next = head;
+    head = n;
+}
+
+// Insert at beginning
+void insertBeg() {
+    struct node *n = malloc(sizeof(struct node));
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->next = head;
+    head = n;
+}
+
+// Insert at end
+void insertEnd() {
+    struct node *n = malloc(sizeof(struct node)), *t = head;
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->next = NULL;
+
+    if (!head)
+        head = n;
+    else {
+        while (t->next)
+            t = t->next;
+        t->next = n;
+    }
+}
+
+// Insert after a given value
+void insert_at_pos() {
+    int val;
+    struct node *n = malloc(sizeof(struct node)), *t = head;
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    printf("Enter value after which to insert: ");
+    scanf("%d", &val);
+
+    while (t && t->data != val)
+        t = t->next;
+
+    if (!t) {
+        printf("Value not found!\n");
+        free(n);
+        return;
+    }
+
+    n->next = t->next;
+    t->next = n;
+}
+
+// Delete from beginning
+void deleteBeg() {
+    struct node *t;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    t = head;
+    head = head->next;
+    free(t);
+}
+
+// Delete from end
+void deleteEnd() {
+    struct node *t = head;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    if (!head->next) {
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    while (t->next->next)
+        t = t->next;
+
+    free(t->next);
+    t->next = NULL;
+}
+
+// Delete a node by value
+void delete_at_pos() {
+    int val;
+    struct node *t = head, *d;
+
+    printf("Enter value to delete: ");
+    scanf("%d", &val);
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    if (head->data == val) {
+        d = head;
+        head = head->next;
+        free(d);
+        return;
+    }
+
+    while (t->next && t->next->data != val)
+        t = t->next;
+
+    if (!t->next) {
+        printf("Value not found!\n");
+        return;
+    }
+
+    d = t->next;
+    t->next = d->next;
+    free(d);
+}
+
+// Display the list
+void displayNode() {
+    struct node *t = head;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    while (t) {
+        printf("%d -> ", t->data);
+        t = t->next;
+    }
+
+    printf("NULL\n");
+}
+
+// Main function
+int main() {
+    int choice;
+
+    do {
+        printf("\n1. Create");
+        printf("\n2. Insert Begin");
+        printf("\n3. Insert End");
+        printf("\n4. Insert After Value");
+        printf("\n5. Delete Begin");
+        printf("\n6. Delete End");
+        printf("\n7. Delete By Value");
+        printf("\n8. Display");
+        printf("\n9. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: create_list(); break;
+            case 2: insertBeg(); break;
+            case 3: insertEnd(); break;
+            case 4: insert_at_pos(); break;
+            case 5: deleteBeg(); break;
+            case 6: deleteEnd(); break;
+            case 7: delete_at_pos(); break;
+            case 8: displayNode(); break;
+        }
+
+    } while (choice != 9);
+
+    return 0;
+}
+
+
+
+
+
+
+4B - 257
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct node {
+    int data;
+    struct node *prev, *next;
+};
+
+struct node *head = NULL;
+
+// Create list
+void createList() {
+    int n, i;
+    struct node *newNode, *t;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    if (n <= 0)
+        return;
+
+    head = NULL;
+
+    for (i = 1; i <= n; i++) {
+        newNode = malloc(sizeof(struct node));
+
+        printf("Enter data: ");
+        scanf("%d", &newNode->data);
+
+        newNode->next = NULL;
+
+        if (!head) {
+            newNode->prev = NULL;
+            head = t = newNode;
+        } else {
+            t->next = newNode;
+            newNode->prev = t;
+            t = newNode;
+        }
+    }
+}
+
+// Insert at beginning
+void insertBegin() {
+    struct node *n = malloc(sizeof(struct node));
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->prev = NULL;
+    n->next = head;
+
+    if (head)
+        head->prev = n;
+
+    head = n;
+}
+
+// Insert at end
+void insertEnd() {
+    struct node *n = malloc(sizeof(struct node)), *t = head;
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->next = NULL;
+
+    if (!head) {
+        n->prev = NULL;
+        head = n;
+        return;
+    }
+
+    while (t->next)
+        t = t->next;
+
+    t->next = n;
+    n->prev = t;
+}
+
+// Insert at position
+void insertPosition() {
+    int pos, i;
+    struct node *n, *t = head;
+
+    printf("Enter position: ");
+    scanf("%d", &pos);
+
+    if (pos <= 0)
+        return;
+
+    if (pos == 1) {
+        insertBegin();
+        return;
+    }
+
+    for (i = 1; i < pos - 1 && t; i++)
+        t = t->next;
+
+    if (!t) {
+        printf("Position not found!\n");
+        return;
+    }
+
+    n = malloc(sizeof(struct node));
+
+    printf("Enter data: ");
+    scanf("%d", &n->data);
+
+    n->next = t->next;
+    n->prev = t;
+
+    if (t->next)
+        t->next->prev = n;
+
+    t->next = n;
+}
+
+// Delete from beginning
+void deleteBegin() {
+    struct node *t;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    t = head;
+    head = head->next;
+
+    if (head)
+        head->prev = NULL;
+
+    free(t);
+}
+
+// Delete from end
+void deleteEnd() {
+    struct node *t = head;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    if (!head->next) {
+        free(head);
+        head = NULL;
+        return;
+    }
+
+    while (t->next)
+        t = t->next;
+
+    t->prev->next = NULL;
+    free(t);
+}
+
+// Delete by value
+void deleteValue() {
+    int value;
+    struct node *t = head;
+
+    printf("Enter value to delete: ");
+    scanf("%d", &value);
+
+    while (t && t->data != value)
+        t = t->next;
+
+    if (!t) {
+        printf("Value not found!\n");
+        return;
+    }
+
+    if (t == head)
+        head = t->next;
+    else
+        t->prev->next = t->next;
+
+    if (t->next)
+        t->next->prev = t->prev;
+
+    free(t);
+}
+
+// Display forward
+void displayForward() {
+    struct node *t = head;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    while (t) {
+        printf("%d <-> ", t->data);
+        t = t->next;
+    }
+
+    printf("NULL\n");
+}
+
+// Display reverse
+void displayReverse() {
+    struct node *t = head;
+
+    if (!head) {
+        printf("List is empty!\n");
+        return;
+    }
+
+    while (t->next)
+        t = t->next;
+
+    while (t) {
+        printf("%d <-> ", t->data);
+        t = t->prev;
+    }
+
+    printf("NULL\n");
+}
+
+// Main function
+int main() {
+    int choice;
+
+    do {
+        printf("\n1. Create");
+        printf("\n2. Insert Begin");
+        printf("\n3. Insert End");
+        printf("\n4. Insert Position");
+        printf("\n5. Delete Begin");
+        printf("\n6. Delete End");
+        printf("\n7. Delete Value");
+        printf("\n8. Display Forward");
+        printf("\n9. Display Reverse");
+        printf("\n10. Exit");
+        printf("\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: createList(); break;
+            case 2: insertBegin(); break;
+            case 3: insertEnd(); break;
+            case 4: insertPosition(); break;
+            case 5: deleteBegin(); break;
+            case 6: deleteEnd(); break;
+            case 7: deleteValue(); break;
+            case 8: displayForward(); break;
+            case 9: displayReverse(); break;
+        }
+
+    } while (choice != 10);
+
+    return 0;
+}
+
+
+
+5-BTC 82 line
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+struct Node {
+    int data;
+    struct Node *left, *right;
+};
+
+// Create a new node
+struct Node* createNode(int value) {
+    struct Node* newNode = malloc(sizeof(struct Node));
+
+    newNode->data = value;
+    newNode->left = NULL;
+    newNode->right = NULL;
+
+    return newNode;
+}
+
+// Insert a node in BST
+struct Node* insert(struct Node* root, int value) {
+    if (root == NULL)
+        return createNode(value);
+
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+
+    return root;
+}
+
+// Inorder: Left, Root, Right
+void inorder(struct Node* root) {
+    if (root) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+// Preorder: Root, Left, Right
+void preorder(struct Node* root) {
+    if (root) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+// Postorder: Left, Right, Root
+void postorder(struct Node* root) {
+    if (root) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+// Main function
+int main() {
+    struct Node* root = NULL;
+    int values[] = {50, 30, 20, 40, 70, 60, 80};
+    int n = 7;
+
+    // Insert values into BST
+    for (int i = 0; i < n; i++)
+        root = insert(root, values[i]);
+
+    // Display traversals
+    printf("Inorder: ");
+    inorder(root);
+
+    printf("\nPreorder: ");
+    preorder(root);
+
+    printf("\nPostorder: ");
+    postorder(root);
+
+    return 0;
+}
+
+6. 200 lime
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Create new node
+struct Node* createNode(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->left = newNode->right = NULL;
+    return newNode;
+}
+
+// Insert into BST
+struct Node* insert(struct Node* root, int value) {
+    if (root == NULL) return createNode(value);
+
+    if (value < root->data)
+        root->left = insert(root->left, value);
+    else if (value > root->data)
+        root->right = insert(root->right, value);
+
+    return root;
+}
+
+// Find minimum node in a BST
+struct Node* findMin(struct Node* root) {
+    while (root && root->left != NULL)
+        root = root->left;
+    return root;
+}
+
+// Delete node from BST
+struct Node* deleteNode(struct Node* root, int value) {
+    if (root == NULL) return root;
+
+    if (value < root->data)
+        root->left = deleteNode(root->left, value);
+    else if (value > root->data)
+        root->right = deleteNode(root->right, value);
+    else {
+        // Node found
+        if (root->left == NULL) {
+            struct Node* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            struct Node* temp = root->left;
+            free(root);
+            return temp;
+        }
+
+        // Node with 2 children: replace with inorder successor
+        struct Node* temp = findMin(root->right);
+        root->data = temp->data;
+        root->right = deleteNode(root->right, temp->data);
+    }
+
+    return root;
+}
+
+// Search in BST
+struct Node* search(struct Node* root, int value) {
+    if (root == NULL || root->data == value)
+        return root;
+
+    if (value < root->data)
+        return search(root->left, value);
+    else
+        return search(root->right, value);
+}
+
+// Find max element in BST
+struct Node* findMax(struct Node* root) {
+    while (root && root->right != NULL)
+        root = root->right;
+    return root;
+}
+
+// Traversals
+void inorder(struct Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void preorder(struct Node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void postorder(struct Node* root) {
+    if (root != NULL) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+int main() {
+    struct Node* root = NULL;
+    int choice, value, n, i;
+
+    do {
+        printf("1. Insert N integers\n");
+        printf("2. Insert one integer\n");
+        printf("3. Delete a node\n");
+        printf("4. Search a node\n");
+        printf("5. Find Minimum\n");
+        printf("6. Find Maximum\n");
+        printf("7. Inorder Traversal\n");
+        printf("8. Preorder Traversal\n");
+        printf("9. Postorder Traversal\n");
+        printf("10. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter number of integers: ");
+                scanf("%d", &n);
+                printf("Enter %d integers: ", n);
+                for (i = 0; i < n; i++) {
+                    scanf("%d", &value);
+                    root = insert(root, value);
+                }
+                break;
+
+            case 2:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                root = insert(root, value);
+                break;
+
+            case 3:
+                printf("Enter value to delete: ");
+                scanf("%d", &value);
+                root = deleteNode(root, value);
+                break;
+
+            case 4:
+                printf("Enter value to search: ");
+                scanf("%d", &value);
+                if (search(root, value) != NULL)
+                    printf("Value %d found in BST.\n", value);
+                else
+                    printf("Value %d not found.\n", value);
+                break;
+
+            case 5:
+                if (root == NULL)
+                    printf("Tree is empty.\n");
+                else
+                    printf("Minimum value: %d\n", findMin(root)->data);
+                break;
+
+            case 6:
+                if (root == NULL)
+                    printf("Tree is empty.\n");
+                else
+                    printf("Maximum value: %d\n", findMax(root)->data);
+                break;
+
+            case 7:
+                printf("Inorder Traversal: ");
+                inorder(root);
+                printf("\n");
+                break;
+
+            case 8:
+                printf("Preorder Traversal: ");
+                preorder(root);
+                printf("\n");
+                break;
+
+            case 9:
+                printf("Postorder Traversal: ");
+                postorder(root);
+                printf("\n");
+                break;
+
+            case 10:
+                printf("Exiting...\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 10);
+
+    return 0;
+}
