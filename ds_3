@@ -1,0 +1,571 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure of a node
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *top = NULL;
+
+// Insert an element into the stack
+void push() {
+    int value;
+    struct Node *newNode;
+
+    printf("Enter element: ");
+    scanf("%d", &value);
+
+    newNode = malloc(sizeof(struct Node));
+
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    // Add the new node at the top
+    newNode->data = value;
+    newNode->next = top;
+    top = newNode;
+
+    printf("%d pushed into stack.\n", value);
+}
+
+// Remove the top element from the stack
+void pop() {
+    struct Node *temp;
+
+    if (top == NULL) {
+        printf("Stack Underflow!\n");
+        return;
+    }
+
+    temp = top;
+    printf("%d popped from stack.\n", top->data);
+    top = top->next;
+    free(temp);
+}
+
+// Display the top element
+void peek() {
+    if (top == NULL) {
+        printf("Stack is empty!\n");
+    } else {
+        printf("Top element is: %d\n", top->data);
+    }
+}
+
+// Display all stack elements
+void display() {
+    struct Node *temp = top;
+
+    if (top == NULL) {
+        printf("Stack is empty!\n");
+        return;
+    }
+
+    printf("Stack elements are: ");
+
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+
+    printf("\n");
+}
+
+// Free the memory occupied by the stack
+void freeStack() {
+    struct Node *temp;
+
+    while (top != NULL) {
+        temp = top;
+        top = top->next;
+        free(temp);
+    }
+}
+
+int main() {
+    int choice;
+
+    do {
+        // Display the menu
+        printf("\n===== STACK USING LINKED LIST =====\n");
+        printf("1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        // Perform the selected operation
+        switch (choice) {
+            case 1:
+                push();
+                break;
+
+            case 2:
+                pop();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                printf("Program terminated.\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 5);
+
+    // Release allocated memory
+    freeStack();
+
+    return 0;
+}
+exp 7.1
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure of a node
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *front = NULL;
+struct Node *rear = NULL;
+
+// Insert an element into the queue
+void enqueue() {
+    int value;
+    struct Node *newNode;
+
+    printf("Enter element: ");
+    scanf("%d", &value);
+
+    newNode = malloc(sizeof(struct Node));
+
+    if (newNode == NULL) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    newNode->data = value;
+    newNode->next = NULL;
+
+    // Insert the node at the rear
+    if (rear == NULL) {
+        front = rear = newNode;
+    } else {
+        rear->next = newNode;
+        rear = newNode;
+    }
+
+    printf("%d inserted into queue.\n", value);
+}
+
+// Remove an element from the queue
+void dequeue() {
+    struct Node *temp;
+
+    if (front == NULL) {
+        printf("Queue Underflow!\n");
+        return;
+    }
+
+    temp = front;
+    printf("%d removed from queue.\n", front->data);
+    front = front->next;
+
+    // Reset rear when the queue becomes empty
+    if (front == NULL) {
+        rear = NULL;
+    }
+
+    free(temp);
+}
+
+// Display the front element
+void peek() {
+    if (front == NULL) {
+        printf("Queue is empty!\n");
+    } else {
+        printf("Front element is: %d\n", front->data);
+    }
+}
+
+// Display all queue elements
+void display() {
+    struct Node *temp = front;
+
+    if (front == NULL) {
+        printf("Queue is empty!\n");
+        return;
+    }
+
+    printf("Queue elements are: ");
+
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+
+    printf("\n");
+}
+
+// Free the memory occupied by the queue
+void freeQueue() {
+    struct Node *temp;
+
+    while (front != NULL) {
+        temp = front;
+        front = front->next;
+        free(temp);
+    }
+
+    rear = NULL;
+}
+
+int main() {
+    int choice;
+
+    do {
+        // Display the menu
+        printf("\n===== QUEUE USING LINKED LIST =====\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Peek\n");
+        printf("4. Display\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        // Perform the selected operation
+        switch (choice) {
+            case 1:
+                enqueue();
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                peek();
+                break;
+
+            case 4:
+                display();
+                break;
+
+            case 5:
+                printf("Program terminated.\n");
+                break;
+
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 5);
+
+    // Release allocated memory
+    freeQueue();
+
+    return 0;
+}
+exp 7.2
+
+
+
+#include <stdio.h>
+
+#define MAX 100
+
+int queue[MAX];
+int front, rear;
+int visited[MAX];
+
+// Insert a vertex into the queue
+void enqueue(int v) {
+    if (rear == MAX - 1) {
+        printf("Queue overflow\n");
+        return;
+    }
+
+    if (front == -1) {
+        front = 0;
+    }
+
+    queue[++rear] = v;
+}
+
+// Remove a vertex from the queue
+int dequeue() {
+    if (front == -1 || front > rear) {
+        return -1;
+    }
+
+    return queue[front++];
+}
+
+// Perform Breadth-First Search
+void BFS(int adj[MAX][MAX], int n, int start) {
+    int i, current;
+
+    front = rear = -1;
+
+    // Mark all vertices as unvisited
+    for (i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+
+    // Start traversal from the given vertex
+    enqueue(start);
+    visited[start] = 1;
+
+    printf("BFS Traversal starting from vertex %d: ", start);
+
+    while (front != -1 && front <= rear) {
+        current = dequeue();
+        printf("%d ", current);
+
+        // Visit all adjacent unvisited vertices
+        for (i = 0; i < n; i++) {
+            if (adj[current][i] == 1 && !visited[i]) {
+                visited[i] = 1;
+                enqueue(i);
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+int main() {
+    int n, i, j, start;
+    int adj[MAX][MAX];
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    if (n < 1 || n > MAX) {
+        printf("Invalid number of vertices.\n");
+        return 1;
+    }
+
+    // Read the adjacency matrix
+    printf("Enter adjacency matrix of the graph:\n");
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &adj[i][j]);
+
+            if (adj[i][j] != 0 && adj[i][j] != 1) {
+                printf("Invalid adjacency matrix.\n");
+                return 1;
+            }
+        }
+    }
+
+    // Read the starting vertex
+    printf("Enter starting vertex (0 to %d): ", n - 1);
+    scanf("%d", &start);
+
+    if (start < 0 || start >= n) {
+        printf("Invalid starting vertex.\n");
+        return 1;
+    }
+
+    BFS(adj, n, start);
+
+    return 0;
+}
+exp 8.1
+
+
+
+#include <stdio.h>
+
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+int visited[MAX];
+
+// Insert a vertex into the stack
+void push(int item) {
+    if (top < MAX - 1) {
+        stack[++top] = item;
+    }
+}
+
+// Remove the top vertex from the stack
+int pop() {
+    return stack[top--];
+}
+
+// Check whether the stack is empty
+int isEmpty() {
+    return top == -1;
+}
+
+// Perform Depth-First Search
+void DFS(int adj[MAX][MAX], int n, int start) {
+    int i, current;
+
+    // Mark all vertices as unvisited
+    for (i = 0; i < n; i++) {
+        visited[i] = 0;
+    }
+
+    top = -1;
+    push(start);
+    visited[start] = 1;
+
+    printf("DFS Traversal starting from vertex %d: ", start);
+
+    while (!isEmpty()) {
+        current = pop();
+        printf("%d ", current);
+
+        // Visit adjacent unvisited vertices
+        for (i = n - 1; i >= 0; i--) {
+            if (adj[current][i] == 1 && !visited[i]) {
+                push(i);
+                visited[i] = 1;
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+// Add an undirected edge
+void addEdge(int graph[MAX][MAX], int start, int end) {
+    graph[start][end] = 1;
+    graph[end][start] = 1;
+}
+
+int main() {
+    int vertices, edges, start, end, i;
+    int adj[MAX][MAX] = {0};
+
+    printf("Input the number of vertices: ");
+    scanf("%d", &vertices);
+
+    if (vertices < 1 || vertices > MAX) {
+        printf("Invalid number of vertices.\n");
+        return 1;
+    }
+
+    printf("Input the number of edges: ");
+    scanf("%d", &edges);
+
+    if (edges < 0 || edges > vertices * (vertices - 1) / 2) {
+        printf("Invalid number of edges.\n");
+        return 1;
+    }
+
+    // Read the edges of the graph
+    for (i = 0; i < edges; i++) {
+        printf("Input edge %d (start end): ", i + 1);
+        scanf("%d %d", &start, &end);
+
+        if (start < 0 || start >= vertices ||
+            end < 0 || end >= vertices) {
+            printf("Invalid edge. Try again.\n");
+            i--;
+            continue;
+        }
+
+        addEdge(adj, start, end);
+    }
+
+    // Read the starting vertex
+    printf("Enter starting vertex (0 to %d): ", vertices - 1);
+    scanf("%d", &start);
+
+    if (start < 0 || start >= vertices) {
+        printf("Invalid starting vertex.\n");
+        return 1;
+    }
+
+    DFS(adj, vertices, start);
+
+    return 0;
+}
+exp 8.2
+
+
+
+
+#include <stdio.h>
+
+#define SIZE 10
+
+// Structure of the hash table
+struct HashTable {
+    int keys[SIZE];
+    int occupied[SIZE];
+};
+
+// Initialize the hash table
+void initialize(struct HashTable *table) {
+    int i;
+
+    for (i = 0; i < SIZE; i++) {
+        table->keys[i] = -1;
+        table->occupied[i] = 0;
+    }
+}
+
+// Calculate the hash index
+int hash(int key) {
+    return key % SIZE;
+}
+
+// Insert a key using linear probing
+void insert(struct HashTable *table, int key) {
+    int index = hash(key);
+
+    while (table->occupied[index]) {
+        printf("Collision Occurred at index %d\n", index);
+
+        // Move to the next index
+        index = (index + 1) % SIZE;
+    }
+
+    table->keys[index] = key;
+    table->occupied[index] = 1;
+
+    printf("Inserted %d at index %d\n", key, index);
+}
+
+int main() {
+    struct HashTable table;
+
+    // Initialize the table
+    initialize(&table);
+
+    // Insert values into the hash table
+    insert(&table, 10);
+    insert(&table, 22);
+    insert(&table, 34);
+    insert(&table, 45);
+    insert(&table, 20);
+
+    return 0;
+}
+exp 9 
